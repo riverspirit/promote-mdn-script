@@ -1,19 +1,26 @@
-/**
- * Created by jsx on 7/3/14.
- */
-
 (function () {
     var dataset = {
         'JavaScript': 'https://developer.mozilla.org/docs/JavaScript',
         'JS Reference': 'https://developer.mozilla.org/docs/JavaScript',
         'JS Documentation': 'https://developer.mozilla.org/docs/JavaScript',
         'JS': 'https://developer.mozilla.org/docs/JavaScript',
-        'HTML5': 'https://developer.mozilla.org/html5'
+        'HTML5': 'https://developer.mozilla.org/html5',
+        'JS Array': 'https://developer.mozilla.org/docs/JavaScript/Reference/Global_Objects/Array',
+        'JS Function': 'https://developer.mozilla.org/docs/JavaScript/Reference/Global_Objects/Function',
+        'JS Number': 'https://developer.mozilla.org/docs/JavaScript/Reference/Global_Objects/Number',
+        'JS RegExp': 'https://developer.mozilla.org/docs/JavaScript/Reference/Global_Objects/RegExp',
+        'JS String': 'https://developer.mozilla.org/docs/JavaScript/Reference/Global_Objects/String',
+        'JS Tutorial': 'https://developer.mozilla.org/docs/JavaScript/Guide',
+        'Learn JavaScript': 'https://developer.mozilla.org/docs/JavaScript/Guide',
+        'Learn JS': 'https://developer.mozilla.org/docs/JavaScript/Guide',
+        'DOM': 'https://developer.mozilla.org/docs/DOM',
+        'WebGL': 'https://developer.mozilla.org/docs/WebGL',
+        'WebSockets': 'https://developer.mozilla.org/docs/WebSockets'
     }
 
     var options = {
         include_elems: ['p', 'div', 'span'],
-        tracking_sting: '?--',
+        tracking_sting: '?utm_source=js%20snippet&utm_medium=content%20link&utm_campaign=promote%20mdn',
         maxlinks: 3
     };
 
@@ -40,12 +47,14 @@
             // text is now stripped of all hyperlinks
 
             for (var keyword in dataset) {
+                var keyword_regex = new RegExp(keyword, 'i');
                 if (replace_count <= options.maxlinks) {
-                    if (text.match(keyword)) {
-                        var link = '<a href="'+ dataset[keyword] +'">' + keyword + '</a>';
+                    if (text.match(keyword_regex)) {
+                        var exact_word = keyword_regex.exec(text);
+                        var link = '<a href="'+ dataset[keyword] +'">' + exact_word + '</a>';
                         placeholder = '{_mdn_replace_' + placeholder_index + '_}';
                         placeholder_index++;
-                        text = text.replace(keyword, placeholder);
+                        text = text.replace(exact_word, placeholder);
                         anchors[placeholder] = link;
                         delete dataset[keyword];
                         replace_count++;

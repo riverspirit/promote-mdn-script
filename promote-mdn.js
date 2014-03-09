@@ -1,4 +1,4 @@
-(function () {
+var mdnPromoteLinks = window.mdnPromoteLinks || function (userSettings) {
     var dataset = {
         'JavaScript': 'https://developer.mozilla.org/docs/JavaScript',
         'JS Reference': 'https://developer.mozilla.org/docs/JavaScript',
@@ -81,65 +81,96 @@
     }
 
     var options = {
-        include_elems: ['p', 'div', 'span'],
-        tracking_sting: '?utm_source=js%20snippet&utm_medium=content%20link&utm_campaign=promote%20mdn',
-        maxlinks: 3
+        includeElems: ['p', 'div', 'span'],
+        trackingSting: '?utm_source=js%20snippet&utm_medium=content%20link&utm_campaign=promote%20mdn',
+        maxlinks: 3,
+        linkClass: ''
     };
 
-    window._promote_mdn_options = (window._promote_mdn_options) ? window._promote_mdn_options : {};
-    options = extend({}, options, window._promote_mdn_options);
+    userSettings = (userSettings) ? userSettings : {};
+    options = extend({}, options, userSettings);
 
-    var replace_count = 0;
+    var replaceCount = 0;
     var re = new RegExp(/<a[^>]*>(.*?)<\/a>/);
 
     // For the time being, we are not gonna do anything if querySelectorAll is not available in the browser
-    if ('querySelectorAll' in document) {
-        var elements = document.querySelectorAll(options.include_elems.join(', '));
-        Array.prototype.forEach.call(elements, function(o, i){
-            var text = o.innerHTML;
+    if (!'querySelectorAll' in document) {
+        return;
+    }
 
-            if (text.match(/<a[^>]*>(.*?)<\/a>/g) && text.match(/<a[^>]*>(.*?)<\/a>/g).length) {
-                var anchor_count = text.match(/<a[^>]*>(.*?)<\/a>/g).length;
-                var anchors = [];
-                var placeholder;
-                var placeholder_index = 0;
+    var elements = document.querySelectorAll(options.includeElems.join(', '));
+    var nodes = Array.prototype.slice.call(elements, 0); // Converting NodeList to Array, since NodeList doesn't have forEach()
+    nodes.forEach(function(o, i){
+        var text = o.innerHTML;
 
-                for (var i = 0; i < anchor_count; i++) {
-                    var anchor = re.exec(text);
-                    placeholder = '{_m$d$n_repl$ace_' + placeholder_index + '_}';
-                    anchors[placeholder] = anchor[0];
-                    text = text.replace(re, placeholder);
-                    placeholder_index++;
-                }
+        if (text.match(/<a[^>]*>(.*?)<\/a>/g) && text.match(/<a[^>]*>(.*?)<\/a>/g).length) {
+            var anchorCount = text.match(/<a[^>]*>(.*?)<\/a>/g).length;
+            var anchors = [];
+            var placeholder;
+            var placeholderIndex = 0;
 
-                // text is now stripped of all hyperlinks
-
-                for (var keyword in dataset) {
-                    var keyword_regex = new RegExp(keyword, 'i');
-                    if (replace_count <= options.maxlinks) {
-                        if (text.match(keyword_regex)) {
-                            var exact_word = keyword_regex.exec(text);
-                            var link = '<a href="'+ dataset[keyword] + options.tracking_sting +'">' + exact_word + '</a>';
-                            placeholder = '{_m$d$n_repl$ace_' + placeholder_index + '_}';
-                            placeholder_index++;
-                            text = text.replace(exact_word, placeholder);
-                            anchors[placeholder] = link;
-                            delete dataset[keyword];
-                            replace_count++;
-                        }
-                    } else {
-                        break;
-                    }
-                }
-
-                // Now let's replace placeholders with actual anchor tags, pre-existed ones and new ones.
-                for (var l in anchors) {
-                    text = text.replace(l, anchors[l]);
-                }
-
-                o.innerHTML = text;
+            for (var i = 0; i < anchorCount; i++) {
+                var anchor = re.exec(text);
+                placeholder = '{_m$d$n_repl$ace_' + placeholderIndex + '_}';
+                anchors[placeholder] = anchor[0];
+                text = text.replace(re, placeholder);
+                placeholderIndex++;
             }
-        });
+
+            // text is now stripped of all hyperlinks
+
+            for (var keyword in dataset) {
+                var keywordRegex = new RegExp(keyword, 'i');
+                if (replaceCount <= options.maxlinks) {
+                    if (text.match(keywordRegex)) {
+                        var exactWord = keywordRegex.exec(text);
+                        var link = '<a href="'+ dataset[keyword] + options.trackingSting +'" class="'+ options.linkClass
+                            +'">' + exactWord + '</a>';
+                        placeholder = '{_m$d$n_repl$ace_' + placeholderIndex + '_}';
+                        placeholderIndex++;
+                        text = text.replace(exactWord, placeholder);
+                        anchors[placeholder] = link;
+                        delete dataset[keyword];
+                        replaceCount++;
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            // Now let's replace placeholders with actual anchor tags, pre-existed ones and new ones.
+            for (var l in anchors) {
+                text = text.replace(l, anchors[l]);
+            }
+
+            o.innerHTML = text;
+        }
+    });
+
+    // Polyfill for array.forEach
+    if (!Array.prototype.forEach)
+    {
+        Array.prototype.forEach = function(fun /*, thisArg */)
+        {
+            if (this === void 0 || this === null) {
+                throw new TypeError();
+            }
+
+            var t = Object(this);
+            var len = t.length >>> 0;
+
+            if (typeof fun !== "function") {
+                throw new TypeError();
+            }
+
+            var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+
+            for (var i = 0; i < len; i++)
+            {
+                if (i in t)
+                    fun.call(thisArg, t[i], i, t);
+            }
+        };
     }
 
     function extend (out) {
@@ -157,5 +188,4 @@
 
         return out;
     };
-
-})();
+};

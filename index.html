@@ -19,7 +19,7 @@
             Suspendisse eget elit id Html5 aliquet condimentum. Vestibulum ultricies, risus accumsan ultricies
             vulputate, nibh augue tempus massa, quis viverra odio eros sed metus. Nunc bibendum orci in justo laoreet,
             non vulputate mauris ornare. javascript <a href="javascript:;" title="--PRE EXUSTED LINK--">JavaScript and some more</a> morbi tristique senectus et netus et malesuada fames ac
-            turpis egestas. Quisque sed libero eu nisi HTML5 rhoncus id sit amet purus. Pellentesque aliquam
+            turpis egestas. Quisque sed libero eu nisi rhoncus id sit amet purus. Pellentesque aliquam
             interdum augue, in adipiscing quam suscipit eget. JS Reference Morbi blandit tempor consectetur. Mauris blandit sapien
             vel risus iaculis venenatis. Curabitur tellus turpis, porttitor vitae luctus et, euismod et nisi. Proin
             at dapibus nunc, vel convallis risus. Morbi nec leo tristique, tristique risus ornare, egestas nunc.
@@ -36,15 +36,28 @@
     </body>
 
     <!-- Include the below line only if the page doesn't have jQuery included already -->
-    <script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+<!--    <script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>-->
 
     <!-- The rest of the lines are required -->
     <script>
-        (function(){
-            window._promote_mdn_options = {maxlinks: 4}; // Configurable settings
-            var e = document.createElement('script'); e.type='text/javascript';
-            e.src = document.location.protocol + '//developer.cdn.mozilla.net/media/redesign/js/promote-mdn.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(e, s);
-        })();
+        /*        (function(){
+                    window._promote_mdn_options = {maxlinks: 4}; // Configurable settings
+                    var e = document.createElement('script'); e.type='text/javascript';
+                    e.src = document.location.protocol + 'promote-mdn.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(e, s);
+                })();*/
+    </script>
+
+    <script>
+        (function (d,f,a) {
+            // Your settings here
+            var o = {maxlinks: 4, include_elems: ['p', 'div'], linkClass: 'roro'};
+
+            var s=d.createElement("script");s.type="text/javascript";if(s.f)
+            {s.a=function(){if(s.f=="loaded"||s.f=="complete")
+            {s.a=null;mdnPromoteLinks(o)}}}else{s.onload=function()
+            {mdnPromoteLinks(o)}}s.src="promote-mdn.js";
+            d.getElementsByTagName("head")[0].appendChild(s)
+        })(document,'readyState','onreadystatechange');
     </script>
 </html>

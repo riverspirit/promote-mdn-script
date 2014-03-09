@@ -118,7 +118,7 @@
                 if (replace_count <= options.maxlinks) {
                     if (text.match(keyword_regex)) {
                         var exact_word = keyword_regex.exec(text);
-                        var link = '<a href="'+ dataset[keyword] +'">' + exact_word + '</a>';
+                        var link = '<a href="'+ dataset[keyword] + options.tracking_sting +'">' + exact_word + '</a>';
                         placeholder = '{_m$d$n_repl$ace_' + placeholder_index + '_}';
                         placeholder_index++;
                         text = text.replace(exact_word, placeholder);

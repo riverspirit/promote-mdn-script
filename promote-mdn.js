@@ -24,6 +24,9 @@
         maxlinks: 3
     };
 
+    window._promote_mdn_options = (window._promote_mdn_options) ? window._promote_mdn_options : {};
+    options = $.extend({}, options, window._promote_mdn_options);
+
     var replace_count = 0;
     var re = new RegExp(/<a[^>]*>(.*?)<\/a>/);
 

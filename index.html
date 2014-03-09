@@ -38,7 +38,7 @@
     <script src="jquery-2.0.3.min.js"></script>
     <script>
         (function(){
-            var options = {maxlinks: 4};
+            window._promote_mdn_options = {maxlinks: 4, test: 11};
             var e = document.createElement('script'); e.type='text/javascript';
             e.src = document.location.protocol + 'promote-mdn.js';
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(e, s);

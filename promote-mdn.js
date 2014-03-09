@@ -28,17 +28,11 @@
         'CSS Gradients': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_transitions',
         'CSS3 Gradients': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_transitions',
         'linear-gradient': 'https://developer.mozilla.org/docs/Web/CSS/linear-gradient',
-        'linear-gradient(': 'https://developer.mozilla.org/docs/Web/CSS/linear-gradient',
         'radial-gradient': 'https://developer.mozilla.org/docs/Web/CSS/linear-gradient',
-        'radial-gradient(': 'https://developer.mozilla.org/docs/Web/CSS/linear-gradient',
         'repeating-linear-gradient': 'https://developer.mozilla.org/docs/Web/CSS/repeating-linear-gradient',
-        'repeating-linear-gradient(': 'https://developer.mozilla.org/docs/Web/CSS/repeating-linear-gradient',
         'repeating-radial-gradient': 'https://developer.mozilla.org/docs/Web/CSS/repeating-radial-gradient',
-        'repeating-radial-gradient(': 'https://developer.mozilla.org/docs/Web/CSS/repeating-radial-gradient',
         'CSS Animation': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_animations',
         'CSS3 Animation': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_animations',
-        'CSS Transform': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_transform',
-        'CSS3 Transform': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_transform',
         'CSS Transform': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_transform',
         'CSS3 Transform': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_transform',
         'CSS 3D Transform': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_transform',
@@ -111,7 +105,7 @@
 
             for (var i = 0; i < anchor_count; i++) {
                 var anchor = re.exec(text);
-                placeholder = '{_mdn_replace_' + placeholder_index + '_}';
+                placeholder = '{_m$d$n_repl$ace_' + placeholder_index + '_}';
                 anchors[placeholder] = anchor[0];
                 text = text.replace(re, placeholder);
                 placeholder_index++;
@@ -125,7 +119,7 @@
                     if (text.match(keyword_regex)) {
                         var exact_word = keyword_regex.exec(text);
                         var link = '<a href="'+ dataset[keyword] +'">' + exact_word + '</a>';
-                        placeholder = '{_mdn_replace_' + placeholder_index + '_}';
+                        placeholder = '{_m$d$n_repl$ace_' + placeholder_index + '_}';
                         placeholder_index++;
                         text = text.replace(exact_word, placeholder);
                         anchors[placeholder] = link;

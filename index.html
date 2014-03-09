@@ -35,12 +35,15 @@
         </p>
     </body>
 
-    <script src="jquery-2.0.3.min.js"></script>
+    <!-- Include the below line only if the page doesn't have jQuery included already -->
+    <script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+
+    <!-- The rest of the lines are required -->
     <script>
         (function(){
-            window._promote_mdn_options = {maxlinks: 4, test: 11};
+            window._promote_mdn_options = {maxlinks: 4}; // Configurable settings
             var e = document.createElement('script'); e.type='text/javascript';
-            e.src = document.location.protocol + 'promote-mdn.js';
+            e.src = document.location.protocol + '//developer.cdn.mozilla.net/media/redesign/js/promote-mdn.js';
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(e, s);
         })();
     </script>

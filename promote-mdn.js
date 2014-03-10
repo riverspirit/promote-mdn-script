@@ -102,49 +102,56 @@ var mdnPromoteLinks = window.mdnPromoteLinks || function (userSettings) {
     var nodes = Array.prototype.slice.call(elements, 0); // Converting NodeList to Array, since NodeList doesn't have forEach()
     nodes.forEach(function(o, i){
         var text = o.innerHTML;
+        var placeholder;
+        var placeholderIndex = 0;
+        var anchors_existing = [];
+        var anchors_new = [];
 
         if (text.match(/<a[^>]*>(.*?)<\/a>/g) && text.match(/<a[^>]*>(.*?)<\/a>/g).length) {
             var anchorCount = text.match(/<a[^>]*>(.*?)<\/a>/g).length;
-            var anchors = [];
-            var placeholder;
-            var placeholderIndex = 0;
 
             for (var i = 0; i < anchorCount; i++) {
                 var anchor = re.exec(text);
                 placeholder = '{_m$d$n_repl$ace_' + placeholderIndex + '_}';
-                anchors[placeholder] = anchor[0];
+                anchors_existing[placeholder] = anchor[0];
                 text = text.replace(re, placeholder);
                 placeholderIndex++;
             }
-
-            // text is now stripped of all hyperlinks
-
-            for (var keyword in dataset) {
-                var keywordRegex = new RegExp(keyword, 'i');
-                if (replaceCount <= options.maxlinks) {
-                    if (text.match(keywordRegex)) {
-                        var exactWord = keywordRegex.exec(text);
-                        var link = '<a href="'+ dataset[keyword] + options.trackingSting +'" class="'+ options.linkClass
-                            +'">' + exactWord + '</a>';
-                        placeholder = '{_m$d$n_repl$ace_' + placeholderIndex + '_}';
-                        placeholderIndex++;
-                        text = text.replace(exactWord, placeholder);
-                        anchors[placeholder] = link;
-                        delete dataset[keyword];
-                        replaceCount++;
-                    }
-                } else {
-                    break;
-                }
-            }
-
-            // Now let's replace placeholders with actual anchor tags, pre-existed ones and new ones.
-            for (var l in anchors) {
-                text = text.replace(l, anchors[l]);
-            }
-
-            o.innerHTML = text;
         }
+        
+        // text is now stripped of all hyperlinks
+        for (var keyword in dataset) {
+            var keywordRegex = new RegExp(' ' + keyword + ' ', 'i');
+         
+            if (replaceCount <= options.maxlinks) {
+                if (text.match(keywordRegex)) {
+                    var exactWord = keywordRegex.exec(text);
+                    exactWord = exactWord[0].trim();
+                    var link = '<a href="'+ dataset[keyword] + options.trackingSting +'" class="'+ options.linkClass
+                        +'">' + exactWord + '</a>';
+                    placeholder = '{_m$d$n_repl$ace_' + placeholderIndex + '_}';
+                    placeholderIndex++;
+                    text = text.replace(exactWord, placeholder);
+                    anchors_new[placeholder] = link;
+                    delete dataset[keyword];
+                    replaceCount++;
+                }
+            } else {
+                break;
+            }
+        }
+
+
+        // Now let's replace placeholders with actual anchor tags, pre-existed ones and new ones.
+        for (var l in anchors_existing) {
+            text = text.replace(l, anchors_existing[l]);
+        }
+
+        for (var l in anchors_new) {
+            text = text.replace(l, ' ' + anchors_new[l] + ' ');
+        }
+
+        o.innerHTML = text;
     });
 
     // Polyfill for array.forEach

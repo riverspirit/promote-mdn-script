@@ -1,10 +1,10 @@
-var mdnPromoteLinks = window.mdnPromoteLinks || function (userSettings) {
+function PromoteMDNLinks(userSettings) {
 
     // For the time being, we are not gonna do anything if querySelectorAll is not available in the browser
     if (!'querySelectorAll' in document) {
         return;
     }
-    
+
     var dataset = {
         'JavaScript': 'https://developer.mozilla.org/docs/JavaScript',
         'JS Reference': 'https://developer.mozilla.org/docs/JavaScript',
@@ -93,8 +93,7 @@ var mdnPromoteLinks = window.mdnPromoteLinks || function (userSettings) {
         linkClass: ''
     };
 
-    userSettings = (userSettings) ? userSettings : {};
-    options = extend({}, options, userSettings);
+    options = extend({}, options, userSettings || {});
 
     for (var i in options.extraLinks) {
         if (dataset[i] === undefined) {

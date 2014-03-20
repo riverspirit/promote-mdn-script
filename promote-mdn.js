@@ -78,7 +78,7 @@ var mdnPromoteLinks = window.mdnPromoteLinks || function (userSettings) {
         '#mdndev': 'irc://irc.mozilla.org/mdndev',
         'mozilla-central': 'https://developer.mozilla.org/en-US/docs/mozilla-central',
         'Mozilla': 'https://www.mozilla.org/'
-    }
+    };
 
     var options = {
         includeElems: ['p', 'div', 'span'],
@@ -89,6 +89,12 @@ var mdnPromoteLinks = window.mdnPromoteLinks || function (userSettings) {
 
     userSettings = (userSettings) ? userSettings : {};
     options = extend({}, options, userSettings);
+    
+    for (var i in options.extraLinks) {
+        if (dataset[i] === undefined) {
+            dataset[i] = options.extraLinks[i];
+        }
+    }
 
     var replaceCount = 0;
     var re = new RegExp(/<a[^>]*>(.*?)<\/a>/);

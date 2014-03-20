@@ -89,7 +89,7 @@ var mdnPromoteLinks = window.mdnPromoteLinks || function (userSettings) {
 
     userSettings = (userSettings) ? userSettings : {};
     options = extend({}, options, userSettings);
-    
+
     for (var i in options.extraLinks) {
         if (dataset[i] === undefined) {
             dataset[i] = options.extraLinks[i];
@@ -105,8 +105,7 @@ var mdnPromoteLinks = window.mdnPromoteLinks || function (userSettings) {
     }
 
     var elements = document.querySelectorAll(options.includeElems.join(', '));
-    var nodes = Array.prototype.slice.call(elements, 0); // Converting NodeList to Array, since NodeList doesn't have forEach()
-    nodes.forEach(function(o, i){
+    forEach(elements, function(o){
         var text = o.innerHTML;
         var placeholder;
         var placeholderIndex = 0;
@@ -124,11 +123,11 @@ var mdnPromoteLinks = window.mdnPromoteLinks || function (userSettings) {
                 placeholderIndex++;
             }
         }
-        
+
         // text is now stripped of all hyperlinks
         for (var keyword in dataset) {
             var keywordRegex = new RegExp(' ' + keyword + ' ', 'i');
-         
+
             if (replaceCount <= options.maxLinks) {
                 if (text.match(keywordRegex)) {
                     var exactWord = keywordRegex.exec(text);
@@ -147,7 +146,6 @@ var mdnPromoteLinks = window.mdnPromoteLinks || function (userSettings) {
             }
         }
 
-
         // Now let's replace placeholders with actual anchor tags, pre-existed ones and new ones.
         for (var l in anchors_existing) {
             text = text.replace(l, anchors_existing[l]);
@@ -160,19 +158,14 @@ var mdnPromoteLinks = window.mdnPromoteLinks || function (userSettings) {
         o.innerHTML = text;
     });
 
-    // Polyfill for array.forEach
-    if (!Array.prototype.forEach)
-    {
-        Array.prototype.forEach = function(fun /*, thisArg */)
-        {
-            if (this === void 0 || this === null) {
-                throw new TypeError();
-            }
+    function forEach(arr, callback) {
+        if(Array.prototype.forEach) {
+            Array.prototype.forEach.call(arr, callback);
+        }
+        else { // Shim for older browsers that doesn't have array.forEach
+            var len = arr.length >>> 0;
 
-            var t = Object(this);
-            var len = t.length >>> 0;
-
-            if (typeof fun !== "function") {
+            if (typeof callback !== 'function') {
                 throw new TypeError();
             }
 
@@ -180,10 +173,11 @@ var mdnPromoteLinks = window.mdnPromoteLinks || function (userSettings) {
 
             for (var i = 0; i < len; i++)
             {
-                if (i in t)
-                    fun.call(thisArg, t[i], i, t);
+                if (i in arr) {
+                    callback.call(thisArg, arr[i], i, arr);
+                }
             }
-        };
+        }
     }
 
     function extend (out) {

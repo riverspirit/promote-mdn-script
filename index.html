@@ -8,7 +8,7 @@
 
         <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean mollis, enim ut condimentum commodo, quam
-            velit tincidunt nulla, non gravida lacus <a href="javascript:;" title="--PRE EXUSTED LINK--">JavaScript</a> non ante. Proin eu augue hendrerit, fermentum dolor
+            velit tincidunt nulla, non gravida lacus <a href="javascript:;" id="link1" title="--PRE EXUSTED LINK--">JavaScript</a> non ante. Proin eu augue hendrerit, fermentum dolor
             dignissim, facilisis mauris. Donec placerat leo ut mi luctus, eget suscipit quam rutrum.
             Cras congue varius turpis. JavaScrwipt felis at nibh porttitor, a cursus diam consequat.
             Ut vel tempor nisl, ut faucibus ante. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -35,28 +35,25 @@
         </p>
     </body>
 
-    <!-- Include the below line only if the page doesn't have jQuery included already -->
-<!--    <script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>-->
-
-    <!-- The rest of the lines are required -->
+    <!-- To test if event listeners previously bound to links are still working -->
+    <script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script>
-        /*        (function(){
-                    window._promote_mdn_options = {maxlinks: 4}; // Configurable settings
-                    var e = document.createElement('script'); e.type='text/javascript';
-                    e.src = document.location.protocol + 'promote-mdn.js';
-                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(e, s);
-                })();*/
+        $(document).ready(function () {
+            $('#link1').click(function () {
+                alert('Event fired!')
+            });
+        });
     </script>
 
     <script>
         (function (d,f,a) {
             // Your settings here
-            var o = {maxlinks: 4, includeElems: ['div', 'h'], linkClass: 'link-to-mdn', extraLinks: {'tempus': 'http://google.com'}};
+            var o = {maxLinks: 4, includeElems: ['div', 'h'], linkClass: 'link-to-mdn', extraLinks: {'tempus': 'http://google.com'}};
 
             var s=d.createElement("script");s.type="text/javascript";if(s.f)
             {s.a=function(){if(s.f=="loaded"||s.f=="complete")
-            {s.a=null;mdnPromoteLinks(o)}}}else{s.onload=function()
-            {mdnPromoteLinks(o)}}s.src="promote-mdn.js";
+            {s.a=null;PromoteMDNLinks(o)}}}else{s.onload=function()
+            {PromoteMDNLinks(o)}}s.src="promote-mdn.js";
             d.getElementsByTagName("head")[0].appendChild(s)
         })(document,'readyState','onreadystatechange');
     </script>

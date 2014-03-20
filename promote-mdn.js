@@ -82,7 +82,7 @@ var mdnPromoteLinks = window.mdnPromoteLinks || function (userSettings) {
 
     var options = {
         includeElems: ['p', 'div', 'span'],
-        trackingSting: '?utm_source=js%20snippet&utm_medium=content%20link&utm_campaign=promote%20mdn',
+        trackingString: '?utm_source=js%20snippet&utm_medium=content%20link&utm_campaign=promote%20mdn',
         maxLinks: 3,
         linkClass: ''
     };
@@ -133,7 +133,7 @@ var mdnPromoteLinks = window.mdnPromoteLinks || function (userSettings) {
                 if (text.match(keywordRegex)) {
                     var exactWord = keywordRegex.exec(text);
                     exactWord = exactWord[0].trim();
-                    var link = '<a href="'+ dataset[keyword] + options.trackingSting +'" class="'+ options.linkClass
+                    var link = '<a href="'+ dataset[keyword] + options.trackingString +'" class="'+ options.linkClass
                         +'">' + exactWord + '</a>';
                     placeholder = '{_m$d$n_repl$ace_' + placeholderIndex + '_}';
                     placeholderIndex++;

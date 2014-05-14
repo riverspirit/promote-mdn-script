@@ -1,143 +1,142 @@
-function PromoteMDNLinks(userSettings) {
+function PromoteMDN(userSettings) {
 
     // For the time being, we are not gonna do anything if querySelectorAll is not available in the browser
     if (!'querySelectorAll' in document) {
         return;
     }
 
+    var defaults = {
+        searchElements: ['p', 'div', 'span'],
+        trackingString: '?utm_source=js%20snippet&utm_medium=content%20link&utm_campaign=promote%20mdn',
+        maxLinks: 3,
+        linkClass: '',
+        extraLinks: {}
+    };
+
+    var mdnRoot = 'https://developer.mozilla.org/docs/';
+
     var dataset = {
-        'JavaScript': 'https://developer.mozilla.org/docs/JavaScript',
-        'JS Reference': 'https://developer.mozilla.org/docs/JavaScript',
-        'JS Documentation': 'https://developer.mozilla.org/docs/JavaScript',
-        'JS': 'https://developer.mozilla.org/docs/JavaScript',
+        'JavaScript': mdnRoot + 'JavaScript',
+        'JS Reference': mdnRoot + 'JavaScript',
+        'JS Documentation': mdnRoot + 'JavaScript',
+        'JS': mdnRoot + 'JavaScript',
         'HTML5': 'https://developer.mozilla.org/html5',
-        'JS Array': 'https://developer.mozilla.org/docs/JavaScript/Reference/Global_Objects/Array',
-        'JS Function': 'https://developer.mozilla.org/docs/JavaScript/Reference/Global_Objects/Function',
-        'JS Number': 'https://developer.mozilla.org/docs/JavaScript/Reference/Global_Objects/Number',
-        'JS RegExp': 'https://developer.mozilla.org/docs/JavaScript/Reference/Global_Objects/RegExp',
-        'JS String': 'https://developer.mozilla.org/docs/JavaScript/Reference/Global_Objects/String',
-        'JS Tutorial': 'https://developer.mozilla.org/docs/JavaScript/Guide',
-        'Learn JavaScript': 'https://developer.mozilla.org/docs/JavaScript/Guide',
-        'Learn JS': 'https://developer.mozilla.org/docs/JavaScript/Guide',
-        'DOM': 'https://developer.mozilla.org/docs/DOM',
-        'WebGL': 'https://developer.mozilla.org/docs/WebGL',
-        'WebSockets': 'https://developer.mozilla.org/docs/WebSockets',
-        'WebSocket': 'https://developer.mozilla.org/docs/WebSockets',
-        'JSON': 'https://developer.mozilla.org/docs/JSON',
-        'XUL': 'https://developer.mozilla.org/docs/XUL',
-        'HTML': 'https://developer.mozilla.org/docs/Web/HTML',
-        'CSS Reference': 'https://developer.mozilla.org/docs/Web/CSS/CSS_Reference',
-        'CSS': 'https://developer.mozilla.org/docs/Web/CSS',
-        'CSS3': 'https://developer.mozilla.org/docs/Web/CSS/CSS3',
-        'CSS Transitions': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_transitions',
-        'CSS3 Transitions': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_transitions',
-        'CSS Gradients': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_transitions',
-        'CSS3 Gradients': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_transitions',
-        'linear-gradient': 'https://developer.mozilla.org/docs/Web/CSS/linear-gradient',
-        'radial-gradient': 'https://developer.mozilla.org/docs/Web/CSS/linear-gradient',
-        'repeating-linear-gradient': 'https://developer.mozilla.org/docs/Web/CSS/repeating-linear-gradient',
-        'repeating-radial-gradient': 'https://developer.mozilla.org/docs/Web/CSS/repeating-radial-gradient',
-        'CSS Animation': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_animations',
-        'CSS3 Animation': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_animations',
-        'CSS Transform': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_transform',
-        'CSS3 Transform': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_transform',
-        'CSS 3D Transform': 'https://developer.mozilla.org/docs/Web/CSS/Using_CSS_transform',
-        'border-image': 'https://developer.mozilla.org/docs/Web/CSS/border-image',
-        'border-image-source': 'https://developer.mozilla.org/docs/Web/CSS/border-image-source',
-        'border-image-repeat': 'https://developer.mozilla.org/docs/Web/CSS/border-image-repeat',
-        'border-image-width': 'https://developer.mozilla.org/docs/Web/CSS/border-image-width',
-        'border-image-outset': 'https://developer.mozilla.org/docs/Web/CSS/border-image-outset',
+        'JS Array': mdnRoot + 'JavaScript/Reference/Global_Objects/Array',
+        'JS Function': mdnRoot + 'JavaScript/Reference/Global_Objects/Function',
+        'JS Number': mdnRoot + 'JavaScript/Reference/Global_Objects/Number',
+        'JS RegExp': mdnRoot + 'JavaScript/Reference/Global_Objects/RegExp',
+        'JS String': mdnRoot + 'JavaScript/Reference/Global_Objects/String',
+        'JS Tutorial': mdnRoot + 'JavaScript/Guide',
+        'Learn JavaScript': mdnRoot + 'JavaScript/Guide',
+        'Learn JS': mdnRoot + 'JavaScript/Guide',
+        'DOM': mdnRoot + 'DOM',
+        'WebGL': mdnRoot + 'WebGL',
+        'WebSockets': mdnRoot + 'WebSockets',
+        'WebSocket': mdnRoot + 'WebSockets',
+        'JSON': mdnRoot + 'JSON',
+        'XUL': mdnRoot + 'XUL',
+        'HTML': mdnRoot + 'Web/HTML',
+        'CSS Reference': mdnRoot + 'Web/CSS/CSS_Reference',
+        'CSS': mdnRoot + 'Web/CSS',
+        'CSS3': mdnRoot + 'Web/CSS/CSS3',
+        'CSS Transitions': mdnRoot + 'Web/CSS/Using_CSS_transitions',
+        'CSS3 Transitions': mdnRoot + 'Web/CSS/Using_CSS_transitions',
+        'CSS Gradients': mdnRoot + 'Web/CSS/Using_CSS_transitions',
+        'CSS3 Gradients': mdnRoot + 'Web/CSS/Using_CSS_transitions',
+        'linear-gradient': mdnRoot + 'Web/CSS/linear-gradient',
+        'radial-gradient': mdnRoot + 'Web/CSS/linear-gradient',
+        'repeating-linear-gradient': mdnRoot + 'Web/CSS/repeating-linear-gradient',
+        'repeating-radial-gradient': mdnRoot + 'Web/CSS/repeating-radial-gradient',
+        'CSS Animation': mdnRoot + 'Web/CSS/Using_CSS_animations',
+        'CSS3 Animation': mdnRoot + 'Web/CSS/Using_CSS_animations',
+        'CSS Transform': mdnRoot + 'Web/CSS/Using_CSS_transform',
+        'CSS3 Transform': mdnRoot + 'Web/CSS/Using_CSS_transform',
+        'CSS 3D Transform': mdnRoot + 'Web/CSS/Using_CSS_transform',
+        'border-image': mdnRoot + 'Web/CSS/border-image',
+        'border-image-source': mdnRoot + 'Web/CSS/border-image-source',
+        'border-image-repeat': mdnRoot + 'Web/CSS/border-image-repeat',
+        'border-image-width': mdnRoot + 'Web/CSS/border-image-width',
+        'border-image-outset': mdnRoot + 'Web/CSS/border-image-outset',
         'CSS Flexbox': 'https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_flexible_boxes',
         'flexbox': 'https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_flexible_boxes',
         'flexible box': 'https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_flexible_boxes',
-        'Media queries': 'https://developer.mozilla.org/docs/Web/CSS/Media_queries',
-        'pseudo-class': 'https://developer.mozilla.org/docs/Web/CSS/pseudo-classes',
-        'pseudo-classes': 'https://developer.mozilla.org/docs/Web/CSS/pseudo-classes',
-        'pseudo-element': 'https://developer.mozilla.org/docs/Web/CSS/Pseudo-elements',
-        'at-rule': 'https://developer.mozilla.org/docs/Web/CSS/At-rule',
-        '@-rule': 'https://developer.mozilla.org/docs/Web/CSS/At-rule',
+        'Media queries': mdnRoot + 'Web/CSS/Media_queries',
+        'pseudo-class': mdnRoot + 'Web/CSS/pseudo-classes',
+        'pseudo-classes': mdnRoot + 'Web/CSS/pseudo-classes',
+        'pseudo-element': mdnRoot + 'Web/CSS/Pseudo-elements',
+        'at-rule': mdnRoot + 'Web/CSS/At-rule',
+        '@-rule': mdnRoot + 'Web/CSS/At-rule',
         'MDN': 'https://developer.mozilla.org/',
         'Mozilla Developer Network': 'https://developer.mozilla.org/',
         'devmo': 'https://developer.mozilla.org/',
-        'Kuma': 'https://developer.mozilla.org/docs/Project:Getting_started_with_Kuma',
-        'KumaScript': 'https://developer.mozilla.org/docs/Project:Introduction_to_KumaScript',
-        'B2G': 'https://developer.mozilla.org/docs/Mozilla/Firefox_OS',
-        'Firefox OS': 'https://developer.mozilla.org/docs/Mozilla/Firefox_OS',
-        'Boot to Gecko': 'https://developer.mozilla.org/docs/Mozilla/Firefox_OS',
+        'Kuma': mdnRoot + 'Project:Getting_started_with_Kuma',
+        'KumaScript': mdnRoot + 'Project:Introduction_to_KumaScript',
+        'B2G': mdnRoot + 'Mozilla/Firefox_OS',
+        'Firefox OS': mdnRoot + 'Mozilla/Firefox_OS',
+        'Boot to Gecko': mdnRoot + 'Mozilla/Firefox_OS',
         'Persona': 'https://developer.mozilla.org/Persona',
         'BrowserID': 'https://developer.mozilla.org/Persona',
-        'IndexedDB': 'https://developer.mozilla.org/docs/IndexedDB',
-        'Vibration API': 'https://developer.mozilla.org/docs/WebAPI/Vibration',
-        'Geolocation': 'https://developer.mozilla.org/docs/Using_geolocation',
-        'SVG': 'https://developer.mozilla.org/docs/SVG',
-        'ARIA': 'https://developer.mozilla.org/docs/Accessibility/ARIA',
-        'WebRTC': 'https://developer.mozilla.org/docs/WebRTC',
-        'WebAPI': 'https://developer.mozilla.org/docs/WebAPI',
-        'Web apps': 'https://developer.mozilla.org/docs/Apps',
-        'Mozilla Developer Program': 'https://developer.mozilla.org/docs/Mozilla/Developer_Program',
-        'Emscripten': 'https://developer.mozilla.org/docs/Emscripten',
-        'L20n': 'https://developer.mozilla.org/docs/L20n',
+        'IndexedDB': mdnRoot + 'IndexedDB',
+        'Vibration API': mdnRoot + 'WebAPI/Vibration',
+        'Geolocation': mdnRoot + 'Using_geolocation',
+        'SVG': mdnRoot + 'SVG',
+        'ARIA': mdnRoot + 'Accessibility/ARIA',
+        'WebRTC': mdnRoot + 'WebRTC',
+        'WebAPI': mdnRoot + 'WebAPI',
+        'Web apps': mdnRoot + 'Apps',
+        'Emscripten': mdnRoot + 'Emscripten',
+        'L20n': mdnRoot + 'L20n',
         'Firefox Marketplace': 'https://developer.mozilla.org/Marketplace',
-        'Gecko': 'https://developer.mozilla.org/docs/Mozilla/Gecko',
-        'XPCOM': 'https://developer.mozilla.org/docs/Mozilla/XPCOM',
+        'Gecko': mdnRoot + 'Mozilla/Gecko',
+        'XPCOM': mdnRoot + 'Mozilla/XPCOM',
         '#mdn': 'irc://irc.mozilla.org/mdn',
         '#mdndev': 'irc://irc.mozilla.org/mdndev',
         'mozilla-central': 'https://developer.mozilla.org/en-US/docs/mozilla-central',
         'Mozilla': 'https://www.mozilla.org/'
     };
 
-    var options = {
-        includeElems: ['p', 'div', 'span'],
-        trackingString: '?utm_source=js%20snippet&utm_medium=content%20link&utm_campaign=promote%20mdn',
-        maxLinks: 3,
-        linkClass: ''
-    };
+    options = extend(defaults, userSettings || {});
+    dataset = extend(dataset, options.extraLinks);
 
-    options = extend({}, options, userSettings || {});
+    var replaceCount = 0,
+        linkRegex = /<a[^>]*>(.*?)<\/a>/,
+        linkGlobalMatchRegex = new RegExp(linkRegex + 'g'),
+        linkReplaceMatchRegex = new RegExp(linkRegex);
 
-    for (var i in options.extraLinks) {
-        if (dataset[i] === undefined) {
-            dataset[i] = options.extraLinks[i];
-        }
-    }
+    var elements = document.querySelectorAll(options.searchElements.join(', '));
 
-    var replaceCount = 0;
-    var re = new RegExp(/<a[^>]*>(.*?)<\/a>/);
-
-    var elements = document.querySelectorAll(options.includeElems.join(', '));
     forEach(elements, function(o){
-        var text = o.innerHTML;
-        var placeholder;
-        var placeholderIndex = 0;
-        var anchors_existing = [];
-        var anchors_new = [];
+        var text = o.innerHTML,
+            placeholder,
+            placeholderIndex = 0,
+            anchorsExisting = [],
+            anchorsNew = [];
 
-        if (text.match(/<a[^>]*>(.*?)<\/a>/g) && text.match(/<a[^>]*>(.*?)<\/a>/g).length) {
-            var anchorCount = text.match(/<a[^>]*>(.*?)<\/a>/g).length;
-
-            for (var i = 0; i < anchorCount; i++) {
-                var anchor = re.exec(text);
-                placeholder = '{_m$d$n_repl$ace_' + placeholderIndex + '_}';
-                anchors_existing[placeholder] = anchor[0];
-                text = text.replace(re, placeholder);
+        var match = text.match(linkGlobalMatchRegex);
+        if (match && match.length) {
+            for(var i = 0; i < match.length; i++) {
+                var anchor = linkReplaceMatchRegex.exec(text);
+                placeholder = getPlaceholder(placeholderIndex);
+                anchorsExisting[placeholder] = anchor[0];
+                text = text.replace(linkReplaceMatchRegex, placeholder);
                 placeholderIndex++;
             }
         }
 
         // text is now stripped of all hyperlinks
-        for (var keyword in dataset) {
+        for(var keyword in dataset) {
             var keywordRegex = new RegExp(' ' + keyword + ' ', 'i');
 
-            if (replaceCount <= options.maxLinks) {
+            if (replaceCount < options.maxLinks) {
                 if (text.match(keywordRegex)) {
                     var exactWord = keywordRegex.exec(text);
                     exactWord = exactWord[0].trim();
                     var link = '<a href="'+ dataset[keyword] + options.trackingString +'" class="'+ options.linkClass
                         +'">' + exactWord + '</a>';
-                    placeholder = '{_m$d$n_repl$ace_' + placeholderIndex + '_}';
+                    placeholder = getPlaceholder(placeholderIndex);
                     placeholderIndex++;
                     text = text.replace(exactWord, placeholder);
-                    anchors_new[placeholder] = link;
+                    anchorsNew[placeholder] = link;
                     delete dataset[keyword];
                     replaceCount++;
                 }
@@ -147,12 +146,12 @@ function PromoteMDNLinks(userSettings) {
         }
 
         // Now let's replace placeholders with actual anchor tags, pre-existed ones and new ones.
-        for (var l in anchors_existing) {
-            text = text.replace(l, anchors_existing[l]);
+        for(var l in anchorsExisting) {
+            text = text.replace(l, anchorsExisting[l]);
         }
 
-        for (var l in anchors_new) {
-            text = text.replace(l, ' ' + anchors_new[l] + ' ');
+        for(var l in anchorsNew) {
+            text = text.replace(l, ' ' + anchorsNew[l] + ' ');
         }
 
         o.innerHTML = text;
@@ -163,16 +162,13 @@ function PromoteMDNLinks(userSettings) {
             Array.prototype.forEach.call(arr, callback);
         }
         else { // Shim for older browsers that doesn't have array.forEach
-            var len = arr.length >>> 0;
-
             if (typeof callback !== 'function') {
                 throw new TypeError();
             }
 
+            var len = arr.length >>> 0;
             var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
-
-            for (var i = 0; i < len; i++)
-            {
+            for(var i = 0; i < len; i++) {
                 if (i in arr) {
                     callback.call(thisArg, arr[i], i, arr);
                 }
@@ -180,14 +176,14 @@ function PromoteMDNLinks(userSettings) {
         }
     }
 
-    function extend (out) {
+    function extend(out) {
         out = out || {};
 
-        for (var i = 1; i < arguments.length; i++) {
+        for(var i = 1; i < arguments.length; i++) {
             if (!arguments[i])
                 continue;
 
-            for (var key in arguments[i]) {
+            for(var key in arguments[i]) {
                 if (arguments[i].hasOwnProperty(key))
                     out[key] = arguments[i][key];
             }
@@ -195,4 +191,8 @@ function PromoteMDNLinks(userSettings) {
 
         return out;
     };
+
+    function getPlaceholder(placeholderIndex) {
+        return '{_m$d$n_repl$ace_' + placeholderIndex + '_}';
+    }
 };

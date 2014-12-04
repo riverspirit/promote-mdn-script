@@ -7,7 +7,7 @@ function PromoteMDN(userSettings) {
 
     var defaults = {
         searchElements: ['p', 'div', 'span'],
-        trackingString: '?utm_source=js%20snippet&utm_medium=content%20link&utm_campaign=promote%20mdn',
+        trackingString: '?utm_source=' + document.domain + '&utm_medium=js%20snippet&utm_campaign=promote%20mdn',
         maxLinks: 3,
         linkClass: '',
         extraLinks: {}
